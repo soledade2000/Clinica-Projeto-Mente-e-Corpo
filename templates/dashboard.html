@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - Clínica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('dashboard') }}">Clínica</a>
+    <div>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" href="{{ url_for('dashboard') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard_detalhado') }}">Evolução do Paciente</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('lista_pacientes') }}">Pacientes</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('agendamento') }}">Agendamento</a></li>
+      </ul>
+    </div>
+    <div>
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Sair</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h1>Dashboard</h1>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-white bg-primary mb-3">
+        <div class="card-header">Pacientes</div>
+        <div class="card-body">
+          <h5 class="card-title">{{ total_pacientes }}</h5>
+          <p class="card-text">Total de pacientes cadastrados.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card mb-3">
+        <div class="card-header">Próximos Agendamentos</div>
+        <ul class="list-group list-group-flush">
+          {% for appt in appointments %}
+            <li class="list-group-item">
+              {{ appt.data_hora.strftime('%d/%m/%Y %H:%M') }} - {{ appt.paciente }} (Sala: {{ appt.sala }})
+            </li>
+          {% else %}
+            <li class="list-group-item">Nenhum agendamento futuro.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {% if current_user.funcao in ['administrador', 'gerencia'] %}
+    <a href="{{ url_for('novo_usuario') }}" class="btn btn-success">Adicionar Usuário</a>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

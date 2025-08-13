@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Agendamentos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+<body>
+    <h2>Agendamentos</h2>
+    
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+    <table border="1">
+        <tr>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Data/Hora</th>
+            <th>Sala</th>
+            <th>Observações</th>
+        </tr>
+        {% for appt in appointments %}
+        <tr>
+            <td>{{ appt.patient.name }}</td>
+            <td>{{ appt.doctor.name }}</td>
+            <td>{{ appt.date_time.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>{{ appt.room }}</td>
+            <td>{{ appt.notes }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

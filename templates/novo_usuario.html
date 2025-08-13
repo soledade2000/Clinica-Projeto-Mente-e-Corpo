@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+
+{% extends 'base.html' %}
+
+{% block title %}Novo Usuário{% endblock %}
+
+{% block content %}
+<h2>Criar Novo Usuário</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}
+    </p>
+
+    <p>
+        {{ form.senha.label }}<br>
+        {{ form.senha() }}
+    </p>
+
+    <p>
+        {{ form.nome_completo.label }}<br>
+        {{ form.nome_completo(size=64) }}
+    </p>
+
+    <p>
+        {{ form.funcao.label }}<br>
+        {{ form.funcao() }}
+    </p>
+
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}

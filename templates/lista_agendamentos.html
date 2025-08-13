@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+
+{% extends "base.html" %}
+{% block title %}Meus Agendamentos{% endblock %}
+{% block content %}
+<h2>Meus Agendamentos</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Paciente</th>
+      <th>Sala</th>
+      <th>Data e Hora</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for agendamento in agendamentos %}
+    <tr>
+      <td>{{ agendamento.patient.nome }}</td>
+      <td>{{ agendamento.sala }}</td>
+      <td>{{ agendamento.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="3">Nenhum agendamento encontrado.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Pacientes{% endblock %}
+{% block content %}
+<h1>Pacientes Cadastrados</h1>
+
+{% if pacientes %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Data Nascimento</th>
+      <th>Telefone</th>
+      <th>Email</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in pacientes %}
+    <tr>
+      <td>{{ p.nome_completo }}</td>
+      <td>{{ p.data_nascimento.strftime('%d/%m/%Y') }}</td>
+      <td>{{ p.telefone }}</td>
+      <td>{{ p.email }}</td>
+      <td>
+        <a href="{{ url_for('prontuario', paciente_id=p.id) }}" class="btn btn-sm btn-primary">Prontuário</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Não há pacientes cadastrados.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Novo Paciente - Clínica</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const dataNascInput = document.querySelector("#data_nascimento");
+      const idadeInput = document.querySelector("#idade");
+
+      if (dataNascInput && idadeInput) {
+        dataNascInput.addEventListener("change", function () {
+          const nascimento = new Date(this.value);
+          if (!isNaN(nascimento)) {
+            const hoje = new Date();
+            let idade = hoje.getFullYear() - nascimento.getFullYear();
+            const mes = hoje.getMonth() - nascimento.getMonth();
+            if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
+              idade--;
+            }
+            idadeInput.value = idade;
+          }
+        });
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('dashboard') }}">Clínica</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('lista_pacientes') }}">Pacientes</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('agendamento') }}">Agendamento</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('novo_paciente') }}">Novo Paciente</a></li>
+        </ul>
+        <div>
+          <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Sair</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5">
+    <h1>Cadastrar Novo Paciente</h1>
+
+    <form method="POST" action="{{ url_for('novo_paciente') }}">
+      {{ form.hidden_tag() }}
+
+      {% if form.errors %}
+      <div class="alert alert-danger mt-3">
+        <ul class="mb-0">
+          {% for field, errors in form.errors.items() %}
+            {% for error in errors %}
+            <li><strong>{{ form[field].label.text }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <div class="mb-3">
+        {{ form.nome_completo.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.nome_completo(class="form-control") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.nome_social.label(class="form-label") }}
+        {{ form.nome_social(class="form-control") }}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          {{ form.idade.label(class="form-label") }}
+          {{ form.idade(class="form-control", id="idade") }}
+        </div>
+        <div class="col-md-6 mb-3">
+          {{ form.data_nascimento.label(class="form-label") }} <span class="text-danger">*</span>
+          {{ form.data_nascimento(class="form-control", type="date", id="data_nascimento") }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        {{ form.paciente_dependente.label(class="form-label d-block") }} <span class="text-danger">*</span>
+        {% for subfield in form.paciente_dependente %}
+          <div class="form-check form-check-inline">
+            {{ subfield(class="form-check-input") }}
+            {{ subfield.label(class="form-check-label") }}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3">
+        {{ form.nome_dependente.label(class="form-label") }}
+        {{ form.nome_dependente(class="form-control") }}
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          {{ form.data_nascimento_dependente.label(class="form-label") }}
+          {{ form.data_nascimento_dependente(class="form-control", type="date") }}
+        </div>
+        <div class="col-md-6 mb-3">
+          {{ form.idade_dependente.label(class="form-label") }}
+          {{ form.idade_dependente(class="form-control") }}
+        </div>
+      </div>
+
+      <div class="mb-3">
+        {{ form.endereco.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.endereco(class="form-control", rows="2") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.email.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.email(class="form-control") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.telefone.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.telefone(class="form-control") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.escolaridade.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.escolaridade(class="form-select") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.religiao.label(class="form-label") }}
+        {{ form.religiao(class="form-control") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.estado_civil.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.estado_civil(class="form-select") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.servico_buscado.label(class="form-label") }} <span class="text-danger">*</span>
+        {{ form.servico_buscado(class="form-select") }}
+      </div>
+
+      <div class="mb-3">
+        {{ form.servico_buscado_outro.label(class="form-label") }}
+        {{ form.servico_buscado_outro(class="form-control") }}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Salvar</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

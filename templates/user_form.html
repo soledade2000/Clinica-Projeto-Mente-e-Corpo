@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cadastrar Usuário</title>
+</head>
+<body>
+    <h2>Cadastrar Usuário</h2>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <!-- Exibir mensagens flash -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+    <form method="POST">
+  <label>Nome Completo:</label>
+  <input type="text" name="nome_completo" required><br/><br/>
+
+  <label>Usuário (login):</label>
+  <input type="text" name="username" required><br/><br/>
+
+  <label>Senha:</label>
+  <input type="password" name="senha" required><br/><br/>
+
+  <label>Função (ex: Médico, Recepção):</label>
+  <input type="text" name="funcao" required><br/><br/>
+
+  <button type="submit">Cadastrar</button>
+    </form>
+
+    <a href="/">Voltar</a>
+</body>
+</html>

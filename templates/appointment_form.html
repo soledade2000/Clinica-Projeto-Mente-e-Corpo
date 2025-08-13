@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Agendar Consulta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+<body>
+    <h2>Agendar Consulta</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <form method="POST">
+        <label>Paciente:</label><br/>
+        <select name="patient_id" required>
+            {% for patient in patients %}
+                <option value="{{ patient.id }}">{{ patient.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label>Médico:</label><br/>
+        <select name="doctor_id" required>
+            {% for doctor in doctors %}
+                <option value="{{ doctor.id }}">{{ doctor.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label>Data e Hora:</label><br/>
+        <input type="datetime-local" name="date_time" required><br><br>
+
+        <label>Sala:</label><br/>
+        <input type="text" name="room"><br><br>
+
+        <label>Observações:</label><br/>
+        <textarea name="notes"></textarea><br><br>
+
+        <button type="submit">Agendar</button>
+    </form>
+</body>
+</html>

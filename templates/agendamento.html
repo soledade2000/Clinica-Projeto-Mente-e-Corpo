@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Agendamento de Consultas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="container py-4">
+    <h2>Meus Agendamentos</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if agendamentos %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Paciente</th>
+                <th>Médico</th>
+                <th>Data/Hora</th>
+                <th>Sala</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appt in agendamentos %}
+            <tr>
+                <td>{{ appt.paciente.nome_completo }}</td>
+                <td>{{ appt.doctor.nome_completo }}</td>
+                <td>{{ appt.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ appt.sala }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Você não tem agendamentos ainda.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Novo Agendamento</h3>
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+      {{ form.paciente_id.label }}<br>
+      {{ form.paciente_id(class="form-select") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.sala.label }}<br>
+      {{ form.sala(class="form-select") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.data_hora.label }}<br>
+      {{ form.data_hora(class="form-control", min="2025-01-01T09:00", max="2025-12-31T17:00") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.duracao.label }}<br>
+      {{ form.duracao(class="form-select") }}
+    </div>
+
+    <div class="mb-3">
+      {{ form.observacoes.label }}<br>
+      {{ form.observacoes(class="form-control") }}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

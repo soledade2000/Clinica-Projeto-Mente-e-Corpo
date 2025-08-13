@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prontuário de {{ paciente.nome_completo }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="{{ url_for('dashboard') }}">Clínica</a>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('lista_pacientes') }}">Pacientes</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Prontuário</a></li>
+        </ul>
+      </div>
+      <div>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-light">Sair</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+    <h1>Prontuário de {{ paciente.nome_completo }}</h1>
+
+    {% if labels and valores %}
+      <canvas id="graficoEvolucao" width="400" height="200"></canvas>
+    {% endif %}
+
+    <hr />
+
+    <h3>Registros de Evolução</h3>
+
+    {% if evolucoes %}
+      <ul class="list-group mb-4">
+        {% for evo in evolucoes %}
+          <li class="list-group-item">
+            <strong>Data:</strong> {{ evo.data_sessao.strftime('%d/%m/%Y') }} <br />
+            <strong>Evolução:</strong> {{ evo.evolucao }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>Nenhuma evolução cadastrada.</p>
+    {% endif %}
+
+    {% if form %}
+      <h3>Adicionar Evolução</h3>
+      <form method="POST" action="{{ url_for('prontuario', paciente_id=paciente.id) }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.data_sessao.label(class="form-label") }}
+          {{ form.data_sessao(class="form-control", type="date") }}
+        </div>
+        <div class="mb-3">
+          {{ form.evolucao.label(class="form-label") }}
+          {{ form.evolucao(class="form-control", rows="3") }}
+        </div>
+        <button type="submit" class="btn btn-success">Adicionar</button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if labels and valores %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('graficoEvolucao').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: {{ labels | tojson }},
+        datasets: [{
+          label: 'Evolução do Paciente',
+          data: {{ valores | tojson }},
+          borderColor: 'rgb(75, 192, 192)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+  {% endif %}
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
